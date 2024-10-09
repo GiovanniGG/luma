@@ -1,0 +1,683 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <!-- Meta-Informationen -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Luma Konfigurator</title>
+    <!-- Einbindung von Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <!-- Import der Schriftart "Roboto" -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        /* Grundlegende Stile */
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #121212;
+            color: #E0E0E0;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Header-Stile */
+        header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 20px;
+            background-color: #1F1F1F;
+        }
+
+        header h1 {
+            margin: 0;
+            color: #76FF03;
+            font-weight: 500;
+        }
+
+        .header-buttons {
+            display: flex;
+            align-items: center;
+        }
+
+        .header-buttons button {
+            margin-left: 10px;
+            background-color: #2E7D32;
+            color: #FFFFFF;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            font-size: 14px;
+            border-radius: 3px;
+            font-weight: 500;
+        }
+
+        .header-buttons button:hover {
+            background-color: #388E3C;
+        }
+
+        .header-buttons input[type="file"] {
+            display: none;
+        }
+
+        /* Allgemeine Button-Stile */
+        button {
+            background-color: #2E7D32;
+            color: #FFFFFF;
+            border: none;
+            padding: 10px 20px;
+            margin: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            border-radius: 3px;
+            font-weight: 500;
+        }
+
+        button:hover {
+            background-color: #388E3C;
+        }
+
+        /* Listen und Einträge */
+        #hgwList {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 0 10px;
+        }
+
+        .entry {
+            background-color: #1C1C1C;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+        }
+
+        .entry strong {
+            font-size: 20px;
+            color: #76FF03;
+            font-weight: 700;
+        }
+
+        .entry p {
+            margin: 10px 0;
+        }
+
+        .entry ul {
+            list-style-type: none;
+            padding: 0;
+            margin-top: 10px;
+        }
+
+        .entry ul li {
+            background-color: #2A2A2A;
+            padding: 10px;
+            margin-bottom: 5px;
+            border-radius: 3px;
+        }
+
+        .entry ul li button {
+            background-color: #388E3C;
+            margin-left: 5px;
+        }
+
+        .entry ul li button:hover {
+            background-color: #43A047;
+        }
+
+        .entry .button-container {
+            margin-top: 15px;
+            display: flex;
+            flex-wrap: wrap;
+        }
+
+        .entry .button-container button {
+            margin: 5px 5px 0 0;
+        }
+
+        /* Popups */
+        .popup {
+            display: none;
+            position: fixed;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #1E1E1E;
+            border: 2px solid #76FF03;
+            padding: 20px;
+            z-index: 10;
+            border-radius: 5px;
+            color: #E0E0E0;
+            width: 90%;
+            max-width: 400px;
+        }
+
+        .popup h2 {
+            margin-top: 0;
+            color: #76FF03;
+            font-weight: 500;
+        }
+
+        .popup label {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .popup input[type="text"],
+        .popup input[type="number"] {
+            width: 100%;
+            box-sizing: border-box;
+            padding: 8px;
+            margin-bottom: 15px;
+            border: 1px solid #333333;
+            border-radius: 3px;
+            background-color: #2A2A2A;
+            color: #E0E0E0;
+            font-family: 'Roboto', sans-serif;
+            outline: none;
+            transition: border 0.3s, box-shadow 0.3s;
+        }
+
+        .popup input[type="text"]:focus,
+        .popup input[type="number"]:focus {
+            border: 1px solid #76FF03;
+            box-shadow: 0 0 5px rgba(118, 255, 3, 0.5);
+        }
+
+        .popup .button-container {
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        .popup .button-container button {
+            flex: 0 0 auto;
+            margin-left: 10px;
+            background-color: #2E7D32;
+        }
+
+        .popup .button-container button:hover {
+            background-color: #388E3C;
+        }
+
+        /* Overlay */
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(18, 18, 18, 0.8);
+            z-index: 9;
+        }
+
+        /* Platzhalter-Buttons */
+        .placeholder-container {
+            margin-bottom: 15px;
+            display: flex;
+            flex-wrap: wrap;
+        }
+
+        .placeholder-container button {
+            background-color: #2A2A2A;
+            color: #E0E0E0;
+            border: 1px solid #333333;
+            padding: 5px 10px;
+            margin-right: 5px;
+            margin-bottom: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            border-radius: 3px;
+        }
+
+        .placeholder-container button:hover {
+            background-color: #3A3A3A;
+        }
+
+        /* Responsive Anpassungen */
+        @media (max-width: 600px) {
+            .popup {
+                width: 95%;
+            }
+
+            header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .header-buttons {
+                margin-top: 10px;
+                flex-wrap: wrap;
+            }
+
+            .header-buttons button {
+                margin-left: 0;
+                margin-right: 10px;
+                margin-bottom: 10px;
+            }
+
+            .popup .button-container {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .popup .button-container button {
+                width: 100%;
+                margin-left: 0;
+                margin-bottom: 10px;
+            }
+
+            .popup .button-container button:last-child {
+                margin-bottom: 0;
+            }
+
+            .entry ul li {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .entry ul li button {
+                margin: 5px 0 0 0;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>Luma Konfigurator</h1>
+    <div class="header-buttons">
+        <button onclick="openPopup()">Erstellen</button>
+        <button onclick="openAddToAllPopup()">Zu allen hinzufügen</button>
+        <button onclick="exportData()">Exportieren</button>
+        <input type="file" id="fileInput" onchange="importData(event)">
+        <button onclick="document.getElementById('fileInput').click()">Importieren</button>
+    </div>
+</header>
+
+<ul id="hgwList"></ul>
+
+<!-- Popup für neue Einträge -->
+<div class="overlay" id="overlay"></div>
+<div class="popup" id="popup">
+    <h2>Neuen Identifier erstellen</h2>
+    <label for="identifierInput">Identifier:</label>
+    <input type="text" id="identifierInput">
+    <div class="button-container">
+        <button onclick="addHGW()">Hinzufügen</button>
+        <button onclick="closePopup()">Schließen</button>
+    </div>
+</div>
+
+<!-- Popup für Nachrichten hinzufügen/bearbeiten -->
+<div class="popup" id="messagePopup">
+    <h2 id="messagePopupTitle">Nachricht hinzufügen</h2>
+    <label for="messageText">Nachricht:</label>
+    <input type="text" id="messageText">
+    <!-- Platzhalter-Buttons -->
+    <div class="placeholder-container">
+        <button onclick="insertPlaceholder('messageText', '%winners%')">%winners%</button>
+        <button onclick="insertPlaceholder('messageText', '%winner%')">%winner%</button>
+        <button onclick="insertPlaceholder('messageText', '%amount%')">%amount%</button>
+        <button onclick="insertPlaceholder('messageText', '%count%')">%count%</button>
+        <button onclick="insertPlaceholder('messageText', '%value%')">%value%</button>
+    </div>
+    <div class="button-container">
+        <button onclick="saveMessage()">Speichern</button>
+        <button onclick="closeMessagePopup()">Schließen</button>
+    </div>
+</div>
+
+<!-- Popup für Hologramm -->
+<div class="popup" id="hologramPopup">
+    <h2 id="hologramPopupTitle">Hologramm hinzufügen</h2>
+    <label for="hologramId">Hologramm ID:</label>
+    <input type="text" id="hologramId">
+    <label for="hologramReihe">Hologramm Reihe:</label>
+    <input type="text" id="hologramReihe">
+    <label for="hologramText">Text:</label>
+    <input type="text" id="hologramText">
+    <!-- Platzhalter-Buttons -->
+    <div class="placeholder-container">
+        <button onclick="insertPlaceholder('hologramText', '%winners%')">%winners%</button>
+        <button onclick="insertPlaceholder('hologramText', '%winner%')">%winner%</button>
+        <button onclick="insertPlaceholder('hologramText', '%amount%')">%amount%</button>
+        <button onclick="insertPlaceholder('hologramText', '%count%')">%count%</button>
+        <button onclick="insertPlaceholder('hologramText', '%value%')">%value%</button>
+    </div>
+    <div class="button-container">
+        <button onclick="saveHologram()">Speichern</button>
+        <button onclick="closeHologramPopup()">Schließen</button>
+    </div>
+</div>
+
+<!-- Popup für Nachrichten an alle hinzufügen -->
+<div class="popup" id="addToAllPopup">
+    <h2>Nachricht zu allen hinzufügen</h2>
+    <label for="addToAllMessage">Nachricht:</label>
+    <input type="text" id="addToAllMessage">
+    <!-- Platzhalter-Buttons -->
+    <div class="placeholder-container">
+        <button onclick="insertPlaceholder('addToAllMessage', '%winners%')">%winners%</button>
+        <button onclick="insertPlaceholder('addToAllMessage', '%winner%')">%winner%</button>
+        <button onclick="insertPlaceholder('addToAllMessage', '%amount%')">%amount%</button>
+        <button onclick="insertPlaceholder('addToAllMessage', '%count%')">%count%</button>
+        <button onclick="insertPlaceholder('addToAllMessage', '%value%')">%value%</button>
+    </div>
+    <div class="button-container">
+        <button onclick="addMessageToAll()">Hinzufügen</button>
+        <button onclick="closeAddToAllPopup()">Schließen</button>
+    </div>
+</div>
+
+<!-- Popup für Bearbeitung von Counts und Last User -->
+<div class="popup" id="editEntryPopup">
+    <h2>Counter bearbeiten</h2>
+    <label for="editLastUser">Letzter Gewinner:</label>
+    <input type="text" id="editLastUser">
+    <label for="editLastAmount">Letzter Ankauf:</label>
+    <input type="text" id="editLastAmount">
+    <label for="editCount">Insgesamt:</label>
+    <input type="text" id="editCount">
+    <div class="button-container">
+        <button onclick="saveEditEntry()">Speichern</button>
+        <button onclick="closeEditEntryPopup()">Schließen</button>
+    </div>
+</div>
+
+<script>
+    let hgws = [];
+    let currentHGWIndex = null;
+    let currentMessageIndex = null;
+
+    // Funktion zum Öffnen des Popups für neue Einträge
+    function openPopup() {
+        document.getElementById('popup').style.display = 'block';
+        document.getElementById('overlay').style.display = 'block';
+    }
+
+    // Funktion zum Schließen des Popups für neue Einträge
+    function closePopup() {
+        document.getElementById('popup').style.display = 'none';
+        document.getElementById('overlay').style.display = 'none';
+        document.getElementById('identifierInput').value = '';
+    }
+
+    // Funktion zum Hinzufügen eines neuen Eintrags
+    function addHGW() {
+        const identifier = document.getElementById('identifierInput').value.replace(/\./g, '');
+        if (identifier && !identifierExists(Number(identifier))) {
+            const newHGW = {
+                identifier: Number(identifier),
+                lastUser: null,
+                lastAmount: 0,
+                count: 0,
+                messages: []
+            };
+            hgws.push(newHGW);
+            renderList();
+            closePopup();
+        } else {
+            alert('Dieser Identifier existiert bereits oder ist ungültig.');
+        }
+    }
+
+    // Überprüft, ob ein Identifier bereits existiert
+    function identifierExists(identifier) {
+        return hgws.some(hgw => hgw.identifier === identifier);
+    }
+
+    // Formatierung von Eingabefeldern für Zahlen
+    function formatInputField(input) {
+        let value = input.value.replace(/\./g, '');
+        if (!isNaN(value) && value !== '') {
+            input.value = Number(value).toLocaleString('de-DE');
+        }
+    }
+
+    function unformatInputField(input) {
+        input.value = input.value.replace(/\./g, '');
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        const numberInputs = document.querySelectorAll('#identifierInput, #editLastAmount, #editCount, #hologramId, #hologramReihe');
+        numberInputs.forEach(input => {
+            input.addEventListener('input', () => formatInputField(input));
+            input.addEventListener('focus', () => unformatInputField(input));
+            input.addEventListener('blur', () => formatInputField(input));
+        });
+    });
+
+    // Funktion zum Rendern der Liste der Einträge
+    function renderList() {
+        const hgwList = document.getElementById('hgwList');
+        hgwList.innerHTML = '';
+        hgws.forEach((hgw, index) => {
+            const li = document.createElement('li');
+            li.classList.add('entry');
+            li.innerHTML = `
+                <p><strong>Identifier: ${hgw.identifier.toLocaleString('de-DE')}$</strong></p>
+                <p>Letzter Gewinner: ${hgw.lastUser ? hgw.lastUser : 'null'}</p>
+                <p>Letzter Ankauf: ${hgw.lastAmount.toLocaleString('de-DE')}</p>
+                <p>Insgesamt: ${hgw.count.toLocaleString('de-DE')}</p>
+                <p>Nachrichten:</p>
+                ${hgw.messages.length > 0 ? '<ul>' + hgw.messages.map((msg, i) => `
+                <li>${msg}
+                    <div style="margin-top: 5px;">
+                        <button onclick="editMessage(${index}, ${i})">Bearbeiten</button>
+                        <button onclick="removeSpecificMessage(${index}, ${i})">Löschen</button>
+                        <button onclick="moveMessage(${index}, ${i}, -1)">▲</button>
+                        <button onclick="moveMessage(${index}, ${i}, 1)">▼</button>
+                    </div>
+                </li>`).join('') + '</ul>' : '<p>Keine Nachrichten</p>'}
+                <div class="button-container">
+                    <button onclick="openMessagePopup(${index})">Nachricht hinzufügen</button>
+                    <button onclick="openHologramPopup(${index}, null)">Hologramm hinzufügen</button>
+                    <button onclick="openEditEntryPopup(${index})">Counter bearbeiten</button>
+                    <button onclick="confirmDeleteEntry(${index})">Löschen</button>
+                </div>
+            `;
+            hgwList.appendChild(li);
+        });
+    }
+
+    // Funktionen für das Bearbeiten von Einträgen, Nachrichten und Hologrammen
+    function openEditEntryPopup(index) {
+        currentHGWIndex = index;
+        const hgw = hgws[index];
+        document.getElementById('editLastUser').value = hgw.lastUser || '';
+        document.getElementById('editLastAmount').value = hgw.lastAmount.toLocaleString('de-DE') || '0';
+        document.getElementById('editCount').value = hgw.count.toLocaleString('de-DE') || '0';
+
+        document.getElementById('editEntryPopup').style.display = 'block';
+        document.getElementById('overlay').style.display = 'block';
+    }
+
+    function closeEditEntryPopup() {
+        document.getElementById('editEntryPopup').style.display = 'none';
+        document.getElementById('overlay').style.display = 'none';
+    }
+
+    function saveEditEntry() {
+        const lastUser = document.getElementById('editLastUser').value;
+        const lastAmount = document.getElementById('editLastAmount').value.replace(/\./g, '');
+        const count = document.getElementById('editCount').value.replace(/\./g, '');
+
+        hgws[currentHGWIndex].lastUser = lastUser ? lastUser : null;
+        hgws[currentHGWIndex].lastAmount = lastAmount ? Number(lastAmount) : 0;
+        hgws[currentHGWIndex].count = count ? Number(count) : 0;
+
+        renderList();
+        closeEditEntryPopup();
+    }
+
+    function openMessagePopup(hgwIndex, messageIndex = null) {
+        currentHGWIndex = hgwIndex;
+        currentMessageIndex = messageIndex;
+        document.getElementById('messageText').value = messageIndex !== null ? hgws[hgwIndex].messages[messageIndex] : '';
+        document.getElementById('messagePopupTitle').innerText = messageIndex !== null ? 'Nachricht bearbeiten' : 'Nachricht hinzufügen';
+        document.getElementById('messagePopup').style.display = 'block';
+        document.getElementById('overlay').style.display = 'block';
+    }
+
+    function closeMessagePopup() {
+        document.getElementById('messagePopup').style.display = 'none';
+        document.getElementById('overlay').style.display = 'none';
+    }
+
+    function saveMessage() {
+        const message = document.getElementById('messageText').value;
+        if (message) {
+            if (currentMessageIndex !== null) {
+                hgws[currentHGWIndex].messages[currentMessageIndex] = message;
+            } else {
+                hgws[currentHGWIndex].messages.push(message);
+            }
+            renderList();
+            closeMessagePopup();
+        } else {
+            alert('Bitte Nachrichtentext eingeben.');
+        }
+    }
+
+    function openHologramPopup(index, messageIndex = null) {
+        currentHGWIndex = index;
+        currentMessageIndex = messageIndex;
+        document.getElementById('hologramId').value = '';
+        document.getElementById('hologramReihe').value = '';
+        document.getElementById('hologramText').value = '';
+        if (messageIndex !== null) {
+            const message = hgws[index].messages[messageIndex];
+            const match = message.match(/^\/pholo edit (\d+) (\d+) (.+)$/);
+            if (match) {
+                document.getElementById('hologramId').value = match[1];
+                document.getElementById('hologramReihe').value = match[2];
+                document.getElementById('hologramText').value = match[3];
+                document.getElementById('hologramPopupTitle').innerText = 'Hologramm bearbeiten';
+            }
+        } else {
+            document.getElementById('hologramPopupTitle').innerText = 'Hologramm hinzufügen';
+        }
+        document.getElementById('hologramPopup').style.display = 'block';
+        document.getElementById('overlay').style.display = 'block';
+    }
+
+    function closeHologramPopup() {
+        document.getElementById('hologramPopup').style.display = 'none';
+        document.getElementById('overlay').style.display = 'none';
+    }
+
+    function saveHologram() {
+        const hologramId = document.getElementById('hologramId').value.replace(/\./g, '');
+        const hologramReihe = document.getElementById('hologramReihe').value.replace(/\./g, '');
+        const hologramText = document.getElementById('hologramText').value;
+        const hologramMessage = `/pholo edit ${hologramId} ${hologramReihe} ${hologramText}`;
+        if (currentMessageIndex !== null) {
+            hgws[currentHGWIndex].messages[currentMessageIndex] = hologramMessage;
+        } else {
+            hgws[currentHGWIndex].messages.push(hologramMessage);
+        }
+        renderList();
+        closeHologramPopup();
+    }
+
+    function editMessage(hgwIndex, msgIndex) {
+        const message = hgws[hgwIndex].messages[msgIndex];
+        const hologramMatch = message.match(/^\/pholo edit (\d+) (\d+) (.+)$/);
+        if (hologramMatch) {
+            openHologramPopup(hgwIndex, msgIndex);
+        } else {
+            openMessagePopup(hgwIndex, msgIndex);
+        }
+    }
+
+    function removeSpecificMessage(hgwIndex, msgIndex) {
+        hgws[hgwIndex].messages.splice(msgIndex, 1);
+        renderList();
+    }
+
+    function moveMessage(hgwIndex, msgIndex, direction) {
+        const messages = hgws[hgwIndex].messages;
+        const newIndex = msgIndex + direction;
+
+        if (newIndex >= 0 && newIndex < messages.length) {
+            const temp = messages[msgIndex];
+            messages[msgIndex] = messages[newIndex];
+            messages[newIndex] = temp;
+            renderList();
+        }
+    }
+
+    function confirmDeleteEntry(index) {
+        const confirmation = confirm("Möchten Sie diesen Eintrag wirklich löschen?");
+        if (confirmation) {
+            deleteEntry(index);
+        }
+    }
+
+    function deleteEntry(index) {
+        hgws.splice(index, 1);
+        renderList();
+    }
+
+    function exportData() {
+        const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify({ hgws }));
+        const downloadAnchorNode = document.createElement('a');
+        downloadAnchorNode.setAttribute("href", dataStr);
+        downloadAnchorNode.setAttribute("download", "luma.json");
+        document.body.appendChild(downloadAnchorNode);
+        downloadAnchorNode.click();
+        downloadAnchorNode.remove();
+    }
+
+    function importData(event) {
+        const file = event.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                const importedData = JSON.parse(e.target.result);
+                hgws = importedData.hgws;
+                renderList();
+            };
+            reader.readAsText(file);
+        }
+    }
+
+    // Funktionen für "Nachricht zu allen hinzufügen"
+    function openAddToAllPopup() {
+        document.getElementById('addToAllPopup').style.display = 'block';
+        document.getElementById('overlay').style.display = 'block';
+        document.getElementById('addToAllMessage').value = '';
+    }
+
+    function closeAddToAllPopup() {
+        document.getElementById('addToAllPopup').style.display = 'none';
+        document.getElementById('overlay').style.display = 'none';
+    }
+
+    function addMessageToAll() {
+        const message = document.getElementById('addToAllMessage').value;
+        if (message) {
+            hgws.forEach(hgw => {
+                hgw.messages.push(message);
+            });
+            renderList();
+            closeAddToAllPopup();
+        } else {
+            alert('Bitte Nachrichtentext eingeben.');
+        }
+    }
+
+    // Funktion zum Einfügen von Platzhaltern
+    function insertPlaceholder(inputId, placeholder) {
+        const input = document.getElementById(inputId);
+        const cursorPos = input.selectionStart || 0;
+        const textBefore = input.value.substring(0, cursorPos);
+        const textAfter = input.value.substring(cursorPos);
+        input.value = textBefore + placeholder + textAfter;
+        input.focus();
+        input.selectionStart = cursorPos + placeholder.length;
+        input.selectionEnd = cursorPos + placeholder.length;
+    }
+</script>
+
+</body>
+</html>
